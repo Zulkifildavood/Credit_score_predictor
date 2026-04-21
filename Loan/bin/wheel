@@ -1,4 +1,4 @@
-#!/Users/zulki/Documents/Project/Loan_prediction/Loan/bin/python
+#!/Users/zulki/Documents/Project/Loan_prediction/Loan/bin/python3
 # -*- coding: utf-8 -*-
 import re
 import sys

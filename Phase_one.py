@@ -4,7 +4,11 @@ from sklearn.linear_model import LogisticRegression
 from sklearn.preprocessing import StandardScaler
 from sklearn.metrics import accuracy_score, classification_report
 import pickle
+import numpy as np
 import os
+from sklearn.metrics import confusion_matrix, roc_auc_score
+
+
 
 print("1. Loading Real Financial Data...")
 
@@ -64,7 +68,15 @@ for col, mapping in categorical_mappings.items():
         df[col] = df[col].map(mapping)
 
 # --- Handle missing values ---
-df.fillna(df.median(numeric_only=True), inplace=True)
+# --- Handle missing values properly ---
+
+# Numeric columns
+num_cols = df.select_dtypes(include=['int64', 'float64']).columns
+df[num_cols] = df[num_cols].fillna(df[num_cols].median())
+
+# Categorical columns (after mapping)
+cat_cols = df.select_dtypes(include=['object']).columns
+df[cat_cols] = df[cat_cols].fillna("unknown")
 
 # --- Final safety check ---
 if len(df) == 0:
@@ -76,6 +88,10 @@ print("3. Defining Features and Splitting Data...")
 
 X = df.drop(columns=['loan_status'])
 y = df['loan_status']
+
+print("\n📊 Target distribution:")
+print(y.value_counts())
+print(y.value_counts(normalize=True))
 
 # --- Stratified split (important for classification) ---
 X_train, X_test, y_train, y_test = train_test_split(
@@ -96,13 +112,23 @@ print("5. Training the Logistic Regression Model...")
 
 model = LogisticRegression(
     max_iter=1000,
-    solver='lbfgs'
+    solver='lbfgs',
+    class_weight='balanced'   
 )
 
 model.fit(X_train_scaled, y_train)
 
 # --- Predictions ---
-y_pred = model.predict(X_test_scaled)
+# Get probabilities instead
+y_prob = model.predict_proba(X_test_scaled)[:, 1]
+
+# Prevent extreme 0% / 100% confidence
+y_prob = np.clip(y_prob, 0.01, 0.99)
+
+# Custom threshold (tune this: 0.4–0.7)
+threshold = 0.6
+
+y_pred = (y_prob >= threshold).astype(int)
 
 accuracy = accuracy_score(y_test, y_pred)
 
@@ -122,5 +148,12 @@ with open('credit_model.pkl', 'wb') as f:
 
 with open('scaler.pkl', 'wb') as f:
     pickle.dump(scaler, f)
+
+
+print("\n🧱 Confusion Matrix:")
+print(confusion_matrix(y_test, y_pred))
+
+print("\n🎯 ROC-AUC Score:")
+print(roc_auc_score(y_test, y_prob))
 
 print("\n✅ Saved 'credit_model.pkl' and 'scaler.pkl'. Ready for Streamlit/AWS!")

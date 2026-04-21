@@ -41,7 +41,7 @@ if check_password():
     model, scaler = load_assets()
 
     # --- 3. UI LAYOUT ---
-    st.title("🏦 TCS Credit Scoring System")
+    st.title("🏦 Credit Scoring System")
     st.markdown("Automated loan risk assessment platform.")
 
     menu = ["Single Prediction", "Batch Analysis", "Model Insights"]
