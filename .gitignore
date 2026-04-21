@@ -1,0 +1,79 @@
+# -----------------------------
+# Python cache & compiled files
+# -----------------------------
+__pycache__/
+*.py[cod]
+*$py.class
+
+# -----------------------------
+# Virtual environments
+# -----------------------------
+venv/
+env/
+ENV/
+.venv/
+.python-version
+
+# -----------------------------
+# Jupyter Notebook checkpoints
+# -----------------------------
+.ipynb_checkpoints/
+
+# -----------------------------
+# Environment variables
+# -----------------------------
+.env
+.env.*
+
+# -----------------------------
+# Logs & temp files
+# -----------------------------
+*.log
+*.out
+*.err
+
+# -----------------------------
+# OS-specific files
+# -----------------------------
+.DS_Store
+Thumbs.db
+
+# -----------------------------
+# ML Models (IMPORTANT)
+# -----------------------------
+*.pkl
+*.joblib
+
+# -----------------------------
+# Data files (optional but recommended)
+# -----------------------------
+*.csv
+*.xlsx
+*.json
+
+# If you WANT to keep dataset, comment above and use:
+# !data/loan_data.csv
+
+# -----------------------------
+# Streamlit
+# -----------------------------
+.streamlit/
+
+# -----------------------------
+# VS Code / IDE
+# -----------------------------
+.vscode/
+.idea/
+
+# -----------------------------
+# Build / distribution
+# -----------------------------
+build/
+dist/
+*.egg-info/
+
+# -----------------------------
+# Mac / Linux temp
+# -----------------------------
+*.swp
+*.swo
